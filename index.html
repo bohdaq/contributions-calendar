@@ -1,0 +1,139 @@
+Contributions Calendar
+
+<style>
+    .container {
+        display: flex;
+    }
+    .day {
+        margin: 1px;
+        height: 1rem;
+        width: 1rem;
+        background-color: lightgray;
+    }
+
+    .day[one-quoter] {
+        background-color: lightgreen;
+    }
+</style>
+
+<div id="container" class="container">
+
+</div>
+
+<template id="week-template">
+    <div id="week" class="week">
+
+    </div>
+</template>
+
+<template id="day-template">
+    <div id="day" one-quater class="day">
+
+    </div>
+</template>
+
+<script>
+
+    const NUMBER_OF_WEEKS = 52;
+    const NUMBER_OF_DAYS_IN_WEEK = 7;
+    const START_DATE = "2019-01-06T00:32:00.649Z";
+    const MILLIS_START_DATE = new Date('2019-01-06T00:00:00.000Z').getTime();
+    const NUMBER_OF_MILLISECONDS_IN_DAY = 86400000;
+
+    let MAX_CONTRIBUTIONS_NUMBER = 0;
+    let days_array = []
+
+    fetch('/timestamps.json')
+    .then(response => response.json())
+    .then(data => init(data));
+
+
+    function init(contributions) {
+        console.log(contributions);
+        let date = MILLIS_START_DATE;
+
+
+        days_array = build_days_array(contributions, date, days_array);
+
+        for (let i=0; i<NUMBER_OF_WEEKS; i++) {
+            let week = days_array.splice(0, 7);
+            console.log('week ' + i, week);
+
+            const week_template = document.querySelector("#week-template");
+            const week_clone = week_template.content.cloneNode(true);
+
+            for (let j=0; j<NUMBER_OF_DAYS_IN_WEEK; j++) {
+                const day_template = document.querySelector("#day-template");
+                const day_clone = day_template.content.cloneNode("#day-template");
+
+                day_container = day_clone.querySelector('#day');
+
+                const date_contribution = week[j];
+
+                day_container.title = date_contribution.count;
+                day_container.innerHTML = date_contribution.count;
+
+                const week_container = week_clone.querySelector("#week");
+                week_container.appendChild(day_clone);
+            }
+
+
+            const container = document.querySelector("#container");
+            container.appendChild(week_clone);
+
+        }
+
+        console.log('days_array', days_array);
+        console.log('max_contributions', MAX_CONTRIBUTIONS_NUMBER);
+
+    }
+
+    function build_days_array(contributions, date, days_array) {
+        for (let i=0; i<NUMBER_OF_WEEKS; i++) {
+            for (let j=0; j<NUMBER_OF_DAYS_IN_WEEK; j++) {
+                let date_contribution = {};
+                if (!(i===0 && j===0)) {
+                    date += NUMBER_OF_MILLISECONDS_IN_DAY;
+                }
+
+                let count = count_contributions(date, contributions);
+
+                date_contribution = {
+                        count: count,
+                        date: date
+                }
+
+                days_array.push(date_contribution);
+            }
+        }
+
+        return days_array;
+    }
+
+    function count_contributions(date, contributions) {
+            let start_date_in_millis = date;
+            let end_date_in_millis = date + NUMBER_OF_MILLISECONDS_IN_DAY;
+            let count = 0;
+
+            for (let i=0; i<contributions.length; i++) {
+                let contribution = contributions[i];
+                contribution_timestamp_in_millis = new Date(contribution).getTime();
+
+                if (contribution_timestamp_in_millis >= start_date_in_millis && contribution_timestamp_in_millis < end_date_in_millis) {
+                    count += 1;
+                }
+            }
+
+            if (count > MAX_CONTRIBUTIONS_NUMBER) {
+                MAX_CONTRIBUTIONS_NUMBER = count;
+            }
+
+            return count;
+    }
+
+
+
+
+
+
+</script>
