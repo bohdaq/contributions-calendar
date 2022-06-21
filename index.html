@@ -59,7 +59,6 @@
 
 
     function init(contributions) {
-        console.log(contributions);
         let date = MILLIS_START_DATE;
 
         days_array = build_days_array(contributions, date, days_array);
@@ -113,7 +112,6 @@
     function build_widget(days_array) {
         for (let i=0; i<NUMBER_OF_WEEKS; i++) {
             let week = days_array.splice(0, 7);
-            console.log('week ' + i, week);
 
             const week_template = document.querySelector("#week-template");
             const week_clone = week_template.content.cloneNode(true);
@@ -130,6 +128,8 @@
 
                 day_container.title = date_contribution.count;
                 day_container.id = `week-${i}-day-${j}`;
+                day_container.setAttribute('date', date_contribution.date);
+                day_container.setAttribute('contributions', date_contribution.count);
 
                 let percentage = 0;
                 if (date_contribution.count) {
@@ -150,9 +150,34 @@
 
 
             const container = document.querySelector(".container");
+            container.addEventListener("click", clickListener)
             container.appendChild(week_clone);
 
         }
+
+        function clickListener(event, detail) {
+            let rootElement = event.composedPath()[0];
+            if (rootElement.className === 'day') {
+                const date = rootElement.getAttribute('date');
+                const contributions = rootElement.getAttribute('contributions') | 0;
+
+                rootElement.dispatchEvent(new CustomEvent("contributions-calendar-day-selected", {
+                    detail: {
+                        date: date,
+                        contributions: contributions,
+                    },
+                    composed: true,
+                    bubbles: true,
+                }));
+            }
+        }
+    }
+
+
+
+    document.body.addEventListener("contributions-calendar-day-selected", calendarListener);
+    function calendarListener(event) {
+        console.log('calendarListener', event);
     }
 
 
