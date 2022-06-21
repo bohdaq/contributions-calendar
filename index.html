@@ -1,5 +1,3 @@
-Contributions Calendar
-
 <style>
     .container {
         display: flex;
@@ -33,13 +31,13 @@ Contributions Calendar
 </div>
 
 <template id="week-template">
-    <div id="week" class="week">
+    <div class="week">
 
     </div>
 </template>
 
 <template id="day-template">
-    <div id="day" class="day">
+    <div class="day">
 
     </div>
 </template>
@@ -64,50 +62,9 @@ Contributions Calendar
         console.log(contributions);
         let date = MILLIS_START_DATE;
 
-
         days_array = build_days_array(contributions, date, days_array);
 
-        for (let i=0; i<NUMBER_OF_WEEKS; i++) {
-            let week = days_array.splice(0, 7);
-            console.log('week ' + i, week);
-
-            const week_template = document.querySelector("#week-template");
-            const week_clone = week_template.content.cloneNode(true);
-
-            for (let j=0; j<NUMBER_OF_DAYS_IN_WEEK; j++) {
-                const day_template = document.querySelector("#day-template");
-                const day_clone = day_template.content.cloneNode("#day-template");
-
-                day_container = day_clone.querySelector('#day');
-
-                const date_contribution = week[j];
-
-                day_container.title = date_contribution.count;
-                day_container.innerHTML = date_contribution.count;
-
-                let percentage = 0;
-                if (date_contribution.count) {
-                    let percentage = date_contribution.count / MAX_CONTRIBUTIONS_NUMBER
-                    if (percentage >= 0 && percentage <= 0.25) {
-                        day_container.setAttribute('one-quarter', '');
-                    } else if (percentage > 0.25 && percentage <= 0.5) {
-                        day_container.setAttribute('two-quarters', '');
-                    } else if (percentage > 0.5 && percentage <= 0.75) {
-                        day_container.setAttribute('three-quarters', '');
-                    } else if (percentage > 0.75 && percentage <= 1) {
-                        day_container.setAttribute('four-quarters', '');
-                    }
-                }
-
-                const week_container = week_clone.querySelector("#week");
-                week_container.appendChild(day_clone);
-            }
-
-
-            const container = document.querySelector("#container");
-            container.appendChild(week_clone);
-
-        }
+        build_widget(days_array);
     }
 
     function build_days_array(contributions, date, days_array) {
@@ -153,9 +110,50 @@ Contributions Calendar
             return count;
     }
 
+    function build_widget(days_array) {
+        for (let i=0; i<NUMBER_OF_WEEKS; i++) {
+            let week = days_array.splice(0, 7);
+            console.log('week ' + i, week);
+
+            const week_template = document.querySelector("#week-template");
+            const week_clone = week_template.content.cloneNode(true);
+            const week_container = week_clone.querySelector(".week");
+            week_container.id = `week-${i}`;
+
+            for (let j=0; j<NUMBER_OF_DAYS_IN_WEEK; j++) {
+                const day_template = document.querySelector("#day-template");
+                const day_clone = day_template.content.cloneNode("#day-template");
+
+                day_container = day_clone.querySelector('.day');
+
+                const date_contribution = week[j];
+
+                day_container.title = date_contribution.count;
+                day_container.id = `week-${i}-day-${j}`;
+
+                let percentage = 0;
+                if (date_contribution.count) {
+                    let percentage = date_contribution.count / MAX_CONTRIBUTIONS_NUMBER
+                    if (percentage >= 0 && percentage <= 0.25) {
+                        day_container.setAttribute('one-quarter', '');
+                    } else if (percentage > 0.25 && percentage <= 0.5) {
+                        day_container.setAttribute('two-quarters', '');
+                    } else if (percentage > 0.5 && percentage <= 0.75) {
+                        day_container.setAttribute('three-quarters', '');
+                    } else if (percentage > 0.75 && percentage <= 1) {
+                        day_container.setAttribute('four-quarters', '');
+                    }
+                }
+
+                week_container.appendChild(day_clone);
+            }
 
 
+            const container = document.querySelector(".container");
+            container.appendChild(week_clone);
 
+        }
+    }
 
 
 </script>
