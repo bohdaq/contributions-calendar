@@ -1,34 +1,14 @@
-<style>
-    .container {
-        display: flex;
-    }
-    .day {
-        margin: 1px;
-        height: 1rem;
-        width: 1rem;
-        background-color: #ebedf0;
-    }
+<template id="container-template">
+    <style>
+        .container {
+            display: flex;
+        }
+    </style>
+    <div class="container">
 
-    .day[one-quarter] {
-        background-color: #c6e48b;
-    }
+    </div>
+</template>
 
-    .day[two-quarters] {
-        background-color: #7bc96f;
-    }
-
-    .day[three-quarters] {
-        background-color: #239a3b;
-    }
-
-    .day[four-quarters] {
-        background-color: #239a3b;
-    }
-</style>
-
-<div id="container" class="container">
-
-</div>
 
 <template id="week-template">
     <div class="week">
@@ -37,6 +17,30 @@
 </template>
 
 <template id="day-template">
+    <style>
+        .day {
+            margin: 1px;
+            height: 1rem;
+            width: 1rem;
+            background-color: #ebedf0;
+        }
+
+        .day[one-quarter] {
+            background-color: #c6e48b;
+        }
+
+        .day[two-quarters] {
+            background-color: #7bc96f;
+        }
+
+        .day[three-quarters] {
+            background-color: #239a3b;
+        }
+
+        .day[four-quarters] {
+            background-color: #239a3b;
+        }
+    </style>
     <div class="day">
 
     </div>
@@ -110,6 +114,10 @@
     }
 
     function build_widget(days_array) {
+        const container_template = document.querySelector("#container-template");
+        const container_clone = container_template.content.cloneNode(true);
+        const container = container_clone.querySelector(".container");
+
         for (let i=0; i<NUMBER_OF_WEEKS; i++) {
             let week = days_array.splice(0, 7);
 
@@ -148,12 +156,13 @@
                 week_container.appendChild(day_clone);
             }
 
-
-            const container = document.querySelector(".container");
             container.addEventListener("click", clickListener)
             container.appendChild(week_clone);
-
         }
+
+
+        document.body.appendChild(container_clone);
+
 
         function clickListener(event, detail) {
             let rootElement = event.composedPath()[0];
@@ -175,7 +184,7 @@
 
 
 
-    document.body.addEventListener("contributions-calendar-day-selected", calendarListener);
+    document.addEventListener("contributions-calendar-day-selected", calendarListener);
     function calendarListener(event) {
         console.log('calendarListener', event);
     }
