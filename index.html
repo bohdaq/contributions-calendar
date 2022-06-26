@@ -178,8 +178,8 @@
                             week_container.appendChild(day_clone);
                         }
 
-                        container_clone.addEventListener("click", clickListener)
                         container_clone.querySelector('.container').appendChild(week_clone);
+                        container_clone.querySelector('.container').addEventListener("click", clickListener);
                     }
 
 
