@@ -1,24 +1,5 @@
 <contributions-calendar></contributions-calendar>
 
-
-<template id="container-template">
-    <style>
-        .container {
-            display: flex;
-        }
-    </style>
-    <div class="container">
-
-    </div>
-</template>
-
-
-<template id="week-template">
-    <div class="week">
-
-    </div>
-</template>
-
 <template id="day-template">
     <style>
         .day {
@@ -153,7 +134,16 @@
                     for (let i=0; i<NUMBER_OF_WEEKS; i++) {
                         let week = days_array.splice(0, 7);
 
-                        const week_template = document.querySelector("#week-template");
+
+                        const week_template_string = `
+                            <template id="week-template">
+                                <div class="week">
+
+                                </div>
+                            </template>
+                        `;
+
+                        const week_template = parser.parseFromString(week_template_string, 'text/html').querySelector("#week-template");
                         const week_clone = week_template.content.cloneNode(true);
                         const week_container = week_clone.querySelector(".week");
                         week_container.id = `week-${i}`;
