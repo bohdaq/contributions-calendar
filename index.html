@@ -1,35 +1,5 @@
 <contributions-calendar></contributions-calendar>
 
-<template id="day-template">
-    <style>
-        .day {
-            margin: 1px;
-            height: 1rem;
-            width: 1rem;
-            background-color: #ebedf0;
-        }
-
-        .day[one-quarter] {
-            background-color: #c6e48b;
-        }
-
-        .day[two-quarters] {
-            background-color: #7bc96f;
-        }
-
-        .day[three-quarters] {
-            background-color: #239a3b;
-        }
-
-        .day[four-quarters] {
-            background-color: #239a3b;
-        }
-    </style>
-    <div class="day">
-
-    </div>
-</template>
-
 <script>
     document.addEventListener("contributions-calendar-day-selected", calendarListener);
     function calendarListener(event) {
@@ -149,7 +119,39 @@
                         week_container.id = `week-${i}`;
 
                         for (let j=0; j<NUMBER_OF_DAYS_IN_WEEK; j++) {
-                            const day_template = document.querySelector("#day-template");
+                            const day_template_string = `
+                                <template id="day-template">
+                                    <style>
+                                        .day {
+                                            margin: 1px;
+                                            height: 1rem;
+                                            width: 1rem;
+                                            background-color: #ebedf0;
+                                        }
+
+                                        .day[one-quarter] {
+                                            background-color: #c6e48b;
+                                        }
+
+                                        .day[two-quarters] {
+                                            background-color: #7bc96f;
+                                        }
+
+                                        .day[three-quarters] {
+                                            background-color: #239a3b;
+                                        }
+
+                                        .day[four-quarters] {
+                                            background-color: #239a3b;
+                                        }
+                                    </style>
+                                    <div class="day">
+
+                                    </div>
+                                </template>
+                            `;
+
+                            const day_template = parser.parseFromString(day_template_string, 'text/html').querySelector("#day-template");
                             const day_clone = day_template.content.cloneNode("#day-template");
 
                             let day_container = day_clone.querySelector('.day');
