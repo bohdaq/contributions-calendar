@@ -131,9 +131,24 @@
                 }
 
                 function build_widget(days_array) {
-                    const container_template = document.querySelector("#container-template");
-                    const container_clone = container_template.content.cloneNode(true);
-                    const container = container_clone.querySelector(".container");
+                    const parser = new DOMParser();
+                    const container_template_string = `
+                        <template id="container-template">
+                            <style>
+                                .container {
+                                    display: flex;
+                                }
+                            </style>
+                            <div class="container">
+
+                            </div>
+                        </template>
+                    `;
+
+
+                    const container_template = parser.parseFromString(container_template_string, 'text/html');
+                    const container = container_template.querySelector("#container-template");
+                    const container_clone = container.content.cloneNode(true);
 
                     for (let i=0; i<NUMBER_OF_WEEKS; i++) {
                         let week = days_array.splice(0, 7);
@@ -173,8 +188,8 @@
                             week_container.appendChild(day_clone);
                         }
 
-                        container.addEventListener("click", clickListener)
-                        container.appendChild(week_clone);
+                        container_clone.addEventListener("click", clickListener)
+                        container_clone.querySelector('.container').appendChild(week_clone);
                     }
 
 
