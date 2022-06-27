@@ -124,6 +124,32 @@
                 return day_clone;
             }
 
+            build_week(week, week_number) {
+                const week_template_string = `
+                    <template id="week-template">
+                        <div class="week">
+
+                        </div>
+                    </template>
+                `;
+
+                const parser = new DOMParser();
+                const week_template = parser.parseFromString(week_template_string, 'text/html').querySelector("#week-template");
+                const week_clone = week_template.content.cloneNode(true);
+                const week_container = week_clone.querySelector(".week");
+                week_container.id = `week-${week_number}`;
+
+                for (let j=0; j < this.NUMBER_OF_DAYS_IN_WEEK; j++) {
+                    const date_contribution = week[j];
+
+                    const day = this.build_day(date_contribution, week_number, j);
+
+                    week_container.appendChild(day);
+                }
+
+                return week_clone;
+            }
+
 
             constructor() {
                 super();
@@ -167,28 +193,7 @@
 
                     for (let i=0; i < self.NUMBER_OF_WEEKS; i++) {
                         let week = days_array.splice(0, 7);
-
-
-                        const week_template_string = `
-                            <template id="week-template">
-                                <div class="week">
-
-                                </div>
-                            </template>
-                        `;
-
-                        const week_template = parser.parseFromString(week_template_string, 'text/html').querySelector("#week-template");
-                        const week_clone = week_template.content.cloneNode(true);
-                        const week_container = week_clone.querySelector(".week");
-                        week_container.id = `week-${i}`;
-
-                        for (let j=0; j < self.NUMBER_OF_DAYS_IN_WEEK; j++) {
-                            const date_contribution = week[j];
-
-                            const day = self.build_day(date_contribution, i, j);
-
-                            week_container.appendChild(day);
-                        }
+                        let week_clone = self.build_week(week, i);
 
                         container_clone.querySelector('.container').appendChild(week_clone);
                         container_clone.querySelector('.container').addEventListener("click", clickListener);
