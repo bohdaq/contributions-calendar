@@ -8,6 +8,59 @@
 
     customElements.define('contributions-calendar',
         class extends HTMLElement {
+            NUMBER_OF_WEEKS = 52;
+            NUMBER_OF_DAYS_IN_WEEK = 7;
+            NUMBER_OF_MILLISECONDS_IN_DAY = 86400000;
+
+            MAX_CONTRIBUTIONS_NUMBER = 0;
+
+
+            build_days_array(contributions, date) {
+                let days_array = [];
+                for (let i=0; i < this.NUMBER_OF_WEEKS; i++) {
+                    for (let j=0; j < this.NUMBER_OF_DAYS_IN_WEEK; j++) {
+                        let date_contribution = {};
+                        if (!(i===0 && j===0)) {
+                            date += this.NUMBER_OF_MILLISECONDS_IN_DAY;
+                        }
+
+                        let count = this.count_contributions(date, contributions);
+
+                        date_contribution = {
+                                count: count,
+                                date: date
+                        }
+
+                        days_array.push(date_contribution);
+                    }
+                }
+
+                return days_array;
+            }
+
+
+             count_contributions(date, contributions) {
+                let start_date_in_millis = date;
+                let end_date_in_millis = date + this.NUMBER_OF_MILLISECONDS_IN_DAY;
+                let count = 0;
+
+                for (let i=0; i<contributions.length; i++) {
+                    let contribution = contributions[i];
+                    let contribution_timestamp_in_millis = new Date(contribution).getTime();
+
+                    if (contribution_timestamp_in_millis >= start_date_in_millis && contribution_timestamp_in_millis < end_date_in_millis) {
+                        count += 1;
+                    }
+                }
+
+                if (count > this.MAX_CONTRIBUTIONS_NUMBER) {
+                    this.MAX_CONTRIBUTIONS_NUMBER = count;
+                }
+
+                return count;
+            }
+
+
             constructor() {
                 super();
 
@@ -23,65 +76,25 @@
                 const NUMBER_OF_MILLISECONDS_IN_DAY = 86400000;
 
                 let MAX_CONTRIBUTIONS_NUMBER = 0;
-                let days_array = []
 
                 fetch('/timestamps.json')
                 .then(response => response.json())
-                .then(data => init(data));
+                .then(data => init(data, this));
 
 
-                function init(contributions) {
+                function init(contributions, self) {
                     let date = MILLIS_START_DATE;
 
-                    days_array = build_days_array(contributions, date, days_array);
+                    let days_array = self.build_days_array(contributions, date);
 
-                    build_widget(days_array);
+                    build_widget(days_array, self);
                 }
 
-                function build_days_array(contributions, date, days_array) {
-                    for (let i=0; i<NUMBER_OF_WEEKS; i++) {
-                        for (let j=0; j<NUMBER_OF_DAYS_IN_WEEK; j++) {
-                            let date_contribution = {};
-                            if (!(i===0 && j===0)) {
-                                date += NUMBER_OF_MILLISECONDS_IN_DAY;
-                            }
 
-                            let count = count_contributions(date, contributions);
 
-                            date_contribution = {
-                                    count: count,
-                                    date: date
-                            }
 
-                            days_array.push(date_contribution);
-                        }
-                    }
 
-                    return days_array;
-                }
-
-                function count_contributions(date, contributions) {
-                        let start_date_in_millis = date;
-                        let end_date_in_millis = date + NUMBER_OF_MILLISECONDS_IN_DAY;
-                        let count = 0;
-
-                        for (let i=0; i<contributions.length; i++) {
-                            let contribution = contributions[i];
-                            let contribution_timestamp_in_millis = new Date(contribution).getTime();
-
-                            if (contribution_timestamp_in_millis >= start_date_in_millis && contribution_timestamp_in_millis < end_date_in_millis) {
-                                count += 1;
-                            }
-                        }
-
-                        if (count > MAX_CONTRIBUTIONS_NUMBER) {
-                            MAX_CONTRIBUTIONS_NUMBER = count;
-                        }
-
-                        return count;
-                }
-
-                function build_widget(days_array) {
+                function build_widget(days_array, self) {
                     const parser = new DOMParser();
                     const container_template_string = `
                         <template id="container-template">
@@ -165,7 +178,7 @@
 
                             let percentage = 0;
                             if (date_contribution.count) {
-                                let percentage = date_contribution.count / MAX_CONTRIBUTIONS_NUMBER
+                                let percentage = date_contribution.count / self.MAX_CONTRIBUTIONS_NUMBER
                                 if (percentage >= 0 && percentage <= 0.25) {
                                     day_container.setAttribute('one-quarter', '');
                                 } else if (percentage > 0.25 && percentage <= 0.5) {
