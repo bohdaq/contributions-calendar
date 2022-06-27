@@ -1,10 +1,23 @@
 <contributions-calendar start-date="2019-01-06T00:00:00.000Z"></contributions-calendar>
 
 <script>
-    document.addEventListener("contributions-calendar-day-selected", calendarListener);
-    function calendarListener(event) {
-        console.log('calendarListener', event);
+    document.addEventListener("contributions-calendar-day-selected", day_selected_listener);
+    function day_selected_listener(event) {
+        console.log('contributions-calendar-day-selected', event.detail);
     }
+
+    document.addEventListener("contributions-calendar-ready", contributions_calendar_ready);
+    function contributions_calendar_ready(event) {
+        console.log('contributions-calendar-ready', event.detail);
+
+        const contributions_calendar = event.detail;
+
+        fetch('/timestamps.json')
+                .then(response => response.json())
+                .then(data => contributions_calendar.init(data));
+    }
+
+
 
     customElements.define('contributions-calendar',
         class extends HTMLElement {
@@ -150,23 +163,6 @@
                 return week_clone;
             }
 
-            clickListener(event, detail) {
-                let rootElement = event.composedPath()[0];
-                if (rootElement.className === 'day') {
-                    const date = rootElement.getAttribute('date');
-                    const contributions = rootElement.getAttribute('contributions') | 0;
-
-                    rootElement.dispatchEvent(new CustomEvent("contributions-calendar-day-selected", {
-                        detail: {
-                            date: date,
-                            contributions: contributions,
-                        },
-                        composed: true,
-                        bubbles: true,
-                    }));
-                }
-            }
-
             build_container(days_array) {
                 const parser = new DOMParser();
                 const container_template_string = `
@@ -199,6 +195,23 @@
 
             }
 
+            clickListener(event, detail) {
+                let rootElement = event.composedPath()[0];
+                if (rootElement.className === 'day') {
+                    const date = rootElement.getAttribute('date');
+                    const contributions = rootElement.getAttribute('contributions') | 0;
+
+                    rootElement.dispatchEvent(new CustomEvent("contributions-calendar-day-selected", {
+                        detail: {
+                            date: date,
+                            contributions: contributions,
+                        },
+                        composed: true,
+                        bubbles: true,
+                    }));
+                }
+            }
+
 
             init(contributions) {
                 const shadowRoot = this.attachShadow({ mode: 'open'});
@@ -211,11 +224,15 @@
             constructor() {
                 super();
 
-
-
-                fetch('/timestamps.json')
-                .then(response => response.json())
-                .then(data => this.init(data));
+                this.dispatchEvent(
+                    new CustomEvent("contributions-calendar-ready",
+                        {
+                            detail: this,
+                            composed: true,
+                            bubbles: true,
+                        }
+                    )
+                );
 
             }
         }
