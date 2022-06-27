@@ -1,4 +1,4 @@
-<contributions-calendar></contributions-calendar>
+<contributions-calendar start-date="2019-01-06T00:00:00.000Z"></contributions-calendar>
 
 <script>
     document.addEventListener("contributions-calendar-day-selected", calendarListener);
@@ -15,7 +15,9 @@
             MAX_CONTRIBUTIONS_NUMBER = 0;
 
 
-            build_days_array(contributions, date) {
+            build_days_array(contributions) {
+                let start_date = this.getAttribute("start-date");
+                let date = new Date(start_date).getTime();
                 let days_array = [];
                 for (let i=0; i < this.NUMBER_OF_WEEKS; i++) {
                     for (let j=0; j < this.NUMBER_OF_DAYS_IN_WEEK; j++) {
@@ -67,21 +69,13 @@
                 const shadowRoot = this.attachShadow({ mode: 'open'});
 
 
-                const MILLIS_START_DATE = new Date('2019-01-06T00:00:00.000Z').getTime();
-                const NUMBER_OF_MILLISECONDS_IN_DAY = 86400000;
-
-                let MAX_CONTRIBUTIONS_NUMBER = 0;
-
                 fetch('/timestamps.json')
                 .then(response => response.json())
                 .then(data => init(data, this));
 
 
                 function init(contributions, self) {
-                    let date = MILLIS_START_DATE;
-
-                    let days_array = self.build_days_array(contributions, date);
-
+                    let days_array = self.build_days_array(contributions);
                     build_widget(days_array, self);
                 }
 
