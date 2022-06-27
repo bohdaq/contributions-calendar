@@ -62,6 +62,68 @@
                 return count;
             }
 
+            build_day(date_contribution, week_number, day_number) {
+                const day_template_string = `
+                <template id="day-template">
+                        <style>
+                            .day {
+                                margin: 1px;
+                                height: 1rem;
+                                width: 1rem;
+                                background-color: #ebedf0;
+                            }
+
+                            .day[one-quarter] {
+                                background-color: #c6e48b;
+                            }
+
+                            .day[two-quarters] {
+                                background-color: #7bc96f;
+                            }
+
+                            .day[three-quarters] {
+                                background-color: #239a3b;
+                            }
+
+                            .day[four-quarters] {
+                                background-color: #239a3b;
+                            }
+                        </style>
+                        <div class="day">
+
+                        </div>
+                    </template>
+                `;
+
+                const parser = new DOMParser();
+                const day_template = parser.parseFromString(day_template_string, 'text/html').querySelector("#day-template");
+                const day_clone = day_template.content.cloneNode("#day-template");
+
+                let day_container = day_clone.querySelector('.day');
+
+
+                day_container.title = date_contribution.count;
+                day_container.id = `week-${week_number}-day-${day_number}`;
+                day_container.setAttribute('date', date_contribution.date);
+                day_container.setAttribute('contributions', date_contribution.count);
+
+                let percentage = 0;
+                if (date_contribution.count) {
+                    let percentage = date_contribution.count / this.MAX_CONTRIBUTIONS_NUMBER
+                    if (percentage >= 0 && percentage <= 0.25) {
+                        day_container.setAttribute('one-quarter', '');
+                    } else if (percentage > 0.25 && percentage <= 0.5) {
+                        day_container.setAttribute('two-quarters', '');
+                    } else if (percentage > 0.5 && percentage <= 0.75) {
+                        day_container.setAttribute('three-quarters', '');
+                    } else if (percentage > 0.75 && percentage <= 1) {
+                        day_container.setAttribute('four-quarters', '');
+                    }
+                }
+
+                return day_clone;
+            }
+
 
             constructor() {
                 super();
@@ -121,65 +183,11 @@
                         week_container.id = `week-${i}`;
 
                         for (let j=0; j < self.NUMBER_OF_DAYS_IN_WEEK; j++) {
-                            const day_template_string = `
-                                <template id="day-template">
-                                    <style>
-                                        .day {
-                                            margin: 1px;
-                                            height: 1rem;
-                                            width: 1rem;
-                                            background-color: #ebedf0;
-                                        }
-
-                                        .day[one-quarter] {
-                                            background-color: #c6e48b;
-                                        }
-
-                                        .day[two-quarters] {
-                                            background-color: #7bc96f;
-                                        }
-
-                                        .day[three-quarters] {
-                                            background-color: #239a3b;
-                                        }
-
-                                        .day[four-quarters] {
-                                            background-color: #239a3b;
-                                        }
-                                    </style>
-                                    <div class="day">
-
-                                    </div>
-                                </template>
-                            `;
-
-                            const day_template = parser.parseFromString(day_template_string, 'text/html').querySelector("#day-template");
-                            const day_clone = day_template.content.cloneNode("#day-template");
-
-                            let day_container = day_clone.querySelector('.day');
-
                             const date_contribution = week[j];
 
-                            day_container.title = date_contribution.count;
-                            day_container.id = `week-${i}-day-${j}`;
-                            day_container.setAttribute('date', date_contribution.date);
-                            day_container.setAttribute('contributions', date_contribution.count);
+                            const day = self.build_day(date_contribution, i, j);
 
-                            let percentage = 0;
-                            if (date_contribution.count) {
-                                let percentage = date_contribution.count / self.MAX_CONTRIBUTIONS_NUMBER
-                                if (percentage >= 0 && percentage <= 0.25) {
-                                    day_container.setAttribute('one-quarter', '');
-                                } else if (percentage > 0.25 && percentage <= 0.5) {
-                                    day_container.setAttribute('two-quarters', '');
-                                } else if (percentage > 0.5 && percentage <= 0.75) {
-                                    day_container.setAttribute('three-quarters', '');
-                                } else if (percentage > 0.75 && percentage <= 1) {
-                                    day_container.setAttribute('four-quarters', '');
-                                }
-                            }
-
-                            week_container.appendChild(day_clone);
+                            week_container.appendChild(day);
                         }
 
                         container_clone.querySelector('.container').appendChild(week_clone);
