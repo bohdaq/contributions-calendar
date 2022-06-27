@@ -150,6 +150,23 @@
                 return week_clone;
             }
 
+            clickListener(event, detail) {
+                let rootElement = event.composedPath()[0];
+                if (rootElement.className === 'day') {
+                    const date = rootElement.getAttribute('date');
+                    const contributions = rootElement.getAttribute('contributions') | 0;
+
+                    rootElement.dispatchEvent(new CustomEvent("contributions-calendar-day-selected", {
+                        detail: {
+                            date: date,
+                            contributions: contributions,
+                        },
+                        composed: true,
+                        bubbles: true,
+                    }));
+                }
+            }
+
 
             constructor() {
                 super();
@@ -196,29 +213,14 @@
                         let week_clone = self.build_week(week, i);
 
                         container_clone.querySelector('.container').appendChild(week_clone);
-                        container_clone.querySelector('.container').addEventListener("click", clickListener);
+                        container_clone.querySelector('.container').addEventListener("click", self.clickListener);
                     }
 
 
                     shadowRoot.appendChild(container_clone);
 
 
-                    function clickListener(event, detail) {
-                        let rootElement = event.composedPath()[0];
-                        if (rootElement.className === 'day') {
-                            const date = rootElement.getAttribute('date');
-                            const contributions = rootElement.getAttribute('contributions') | 0;
 
-                            rootElement.dispatchEvent(new CustomEvent("contributions-calendar-day-selected", {
-                                detail: {
-                                    date: date,
-                                    contributions: contributions,
-                                },
-                                composed: true,
-                                bubbles: true,
-                            }));
-                        }
-                    }
                 }
 
 
