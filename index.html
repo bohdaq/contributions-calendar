@@ -200,38 +200,22 @@
             }
 
 
+            init(contributions) {
+                const shadowRoot = this.attachShadow({ mode: 'open'});
+                let days_array = this.build_days_array(contributions);
+                let container_clone = this.build_container(days_array);
+                shadowRoot.appendChild(container_clone);
+            }
+
+
             constructor() {
                 super();
 
-                const shadowRoot = this.attachShadow({ mode: 'open'});
 
 
                 fetch('/timestamps.json')
                 .then(response => response.json())
-                .then(data => init(data, this));
-
-
-                function init(contributions, self) {
-                    let days_array = self.build_days_array(contributions);
-                    build_widget(days_array, self);
-                }
-
-
-
-
-
-                function build_widget(days_array, self) {
-                    let container_clone = self.build_container(days_array);
-
-
-                    shadowRoot.appendChild(container_clone);
-
-
-
-                }
-
-
-
+                .then(data => this.init(data));
 
             }
         }
