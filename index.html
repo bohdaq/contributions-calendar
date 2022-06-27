@@ -67,11 +67,6 @@
                 const shadowRoot = this.attachShadow({ mode: 'open'});
 
 
-
-
-                const NUMBER_OF_WEEKS = 52;
-                const NUMBER_OF_DAYS_IN_WEEK = 7;
-                const START_DATE = "2019-01-06T00:32:00.649Z";
                 const MILLIS_START_DATE = new Date('2019-01-06T00:00:00.000Z').getTime();
                 const NUMBER_OF_MILLISECONDS_IN_DAY = 86400000;
 
@@ -114,7 +109,7 @@
                     const container = container_template.querySelector("#container-template");
                     const container_clone = container.content.cloneNode(true);
 
-                    for (let i=0; i<NUMBER_OF_WEEKS; i++) {
+                    for (let i=0; i < self.NUMBER_OF_WEEKS; i++) {
                         let week = days_array.splice(0, 7);
 
 
@@ -131,7 +126,7 @@
                         const week_container = week_clone.querySelector(".week");
                         week_container.id = `week-${i}`;
 
-                        for (let j=0; j<NUMBER_OF_DAYS_IN_WEEK; j++) {
+                        for (let j=0; j < self.NUMBER_OF_DAYS_IN_WEEK; j++) {
                             const day_template_string = `
                                 <template id="day-template">
                                     <style>
