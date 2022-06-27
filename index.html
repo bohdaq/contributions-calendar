@@ -167,6 +167,38 @@
                 }
             }
 
+            build_container(days_array) {
+                const parser = new DOMParser();
+                const container_template_string = `
+                    <template id="container-template">
+                        <style>
+                            .container {
+                                display: flex;
+                            }
+                        </style>
+                        <div class="container">
+
+                        </div>
+                    </template>
+                `;
+
+
+                const container_template = parser.parseFromString(container_template_string, 'text/html');
+                const container = container_template.querySelector("#container-template");
+                const container_clone = container.content.cloneNode(true);
+
+                for (let i=0; i < this.NUMBER_OF_WEEKS; i++) {
+                    let week = days_array.splice(0, 7);
+                    let week_clone = this.build_week(week, i);
+
+                    container_clone.querySelector('.container').appendChild(week_clone);
+                    container_clone.querySelector('.container').addEventListener("click", this.clickListener);
+                }
+
+                return container_clone;
+
+            }
+
 
             constructor() {
                 super();
@@ -189,32 +221,7 @@
 
 
                 function build_widget(days_array, self) {
-                    const parser = new DOMParser();
-                    const container_template_string = `
-                        <template id="container-template">
-                            <style>
-                                .container {
-                                    display: flex;
-                                }
-                            </style>
-                            <div class="container">
-
-                            </div>
-                        </template>
-                    `;
-
-
-                    const container_template = parser.parseFromString(container_template_string, 'text/html');
-                    const container = container_template.querySelector("#container-template");
-                    const container_clone = container.content.cloneNode(true);
-
-                    for (let i=0; i < self.NUMBER_OF_WEEKS; i++) {
-                        let week = days_array.splice(0, 7);
-                        let week_clone = self.build_week(week, i);
-
-                        container_clone.querySelector('.container').appendChild(week_clone);
-                        container_clone.querySelector('.container').addEventListener("click", self.clickListener);
-                    }
+                    let container_clone = self.build_container(days_array);
 
 
                     shadowRoot.appendChild(container_clone);
