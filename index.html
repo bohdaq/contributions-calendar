@@ -1,22 +1,33 @@
-<contributions-calendar start-date="2019-01-06T00:00:00.000Z"></contributions-calendar>
+<contributions-calendar start-date="2019-01-06T00:00:00.000Z" number-of-weeks="4"></contributions-calendar>
 
 <script defer src="/contributions-calendar.js"></script>
 
 <script>
     document.addEventListener("contributions-calendar-day-selected", day_selected_listener);
     function day_selected_listener(event) {
-        console.log('contributions-calendar-day-selected', event.detail);
+        console.log('contributions-calendar-day-selected event');
+
+        const date_contributions = event.detail;
+
+        var date = new Date(parseInt(date_contributions.date))
+        const contributions = date_contributions.contributions;
+
+        const statement = `${contributions} contribution(s) on ${date}`;
+        console.log(statement);
     }
 
     document.addEventListener("contributions-calendar-ready", contributions_calendar_ready);
     function contributions_calendar_ready(event) {
-        console.log('contributions-calendar-ready', event.detail);
+        console.log('contributions-calendar-ready event');
 
         const contributions_calendar = event.detail;
 
         fetch('/timestamps.json')
                 .then(response => response.json())
                 .then(data => contributions_calendar.init(data));
+
+        // or if you have contributions array already, simply call
+        // contributions_calendar.init(contributions)
     }
 
 </script>

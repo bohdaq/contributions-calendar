@@ -3,15 +3,15 @@ customElements.define('contributions-calendar',
             NUMBER_OF_WEEKS = 52;
             NUMBER_OF_DAYS_IN_WEEK = 7;
             NUMBER_OF_MILLISECONDS_IN_DAY = 86400000;
+            START_DATE = '2019-01-06T00:00:00.000Z';
 
             MAX_CONTRIBUTIONS_NUMBER = 0;
 
 
-            build_days_array(contributions) {
-                let start_date = this.getAttribute("start-date");
+            build_days_array(contributions, start_date, number_of_weeks) {
                 let date = new Date(start_date).getTime();
                 let days_array = [];
-                for (let i=0; i < this.NUMBER_OF_WEEKS; i++) {
+                for (let i=0; i < number_of_weeks; i++) {
                     for (let j=0; j < this.NUMBER_OF_DAYS_IN_WEEK; j++) {
                         let date_contribution = {};
                         if (!(i===0 && j===0)) {
@@ -142,7 +142,7 @@ customElements.define('contributions-calendar',
                 return week_clone;
             }
 
-            build_container(days_array) {
+            build_container(days_array, start_date, number_of_weeks) {
                 const parser = new DOMParser();
                 const container_template_string = `
                     <template id="container-template">
@@ -162,7 +162,8 @@ customElements.define('contributions-calendar',
                 const container = container_template.querySelector("#container-template");
                 const container_clone = container.content.cloneNode(true);
 
-                for (let i=0; i < this.NUMBER_OF_WEEKS; i++) {
+                for (let i=0; i < number_of_weeks; i++) {
+
                     let week = days_array.splice(0, 7);
                     let week_clone = this.build_week(week, i);
 
@@ -194,8 +195,12 @@ customElements.define('contributions-calendar',
 
             init(contributions) {
                 const shadowRoot = this.attachShadow({ mode: 'open'});
-                let days_array = this.build_days_array(contributions);
-                let container_clone = this.build_container(days_array);
+
+                let start_date = this.getAttribute("start-date") || this.START_DATE;
+                let number_of_weeks = parseInt(this.getAttribute("number-of-weeks")) || this.NUMBER_OF_WEEKS;
+
+                let days_array = this.build_days_array(contributions, start_date, number_of_weeks);
+                let container_clone = this.build_container(days_array, start_date, number_of_weeks);
                 shadowRoot.appendChild(container_clone);
             }
 
