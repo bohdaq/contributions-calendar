@@ -1,19 +1,37 @@
 <style>
-<!--    :root {-->
-<!--        &#45;&#45;contributions-calendar-day-tile-default-background: #ccedf0;-->
-<!--        &#45;&#45;contributions-calendar-day-tile-margin: 2px;-->
-<!--        &#45;&#45;contributions-calendar-day-tile-height: 2rem;-->
-<!--        &#45;&#45;contributions-calendar-day-tile-width: 2rem;-->
+    <!-- You can style contributions calendar using CSS variables   -->
+    :root {
+        --contributions-calendar-day-tile-default-background: #ebedf0;
+        --contributions-calendar-day-tile-margin: 1px;
+        --contributions-calendar-day-tile-height: 1rem;
+        --contributions-calendar-day-tile-width: 1rem;
+    }
 
-<!--        &#45;&#45;contributions-calendar-day-tile-one-quarter-background: red;-->
-<!--        &#45;&#45;contributions-calendar-day-tile-two-quarters-background: yellow;-->
-<!--        &#45;&#45;contributions-calendar-day-tile-three-quarters-background: purple;-->
-<!--        &#45;&#45;contributions-calendar-day-tile-four-quarters-background: blue;-->
+    contributions-calendar#calendar {
+        --contributions-calendar-day-tile-one-quarter-background: #c6e48b;
+        --contributions-calendar-day-tile-two-quarters-background: #7bc96f;
+        --contributions-calendar-day-tile-three-quarters-background: #239a3b;
+        --contributions-calendar-day-tile-four-quarters-background: #239a8c;
+    }
 
-<!--    }-->
+    contributions-calendar#anotherCalendar {
+        --contributions-calendar-day-tile-one-quarter-background: red;
+        --contributions-calendar-day-tile-two-quarters-background: black;
+        --contributions-calendar-day-tile-three-quarters-background: brown;
+        --contributions-calendar-day-tile-four-quarters-background: yellow;
+    }
 </style>
 
-<contributions-calendar start-date="2019-01-06T00:00:00.000Z" number-of-weeks="52"></contributions-calendar>
+<h1>Contributions Calendar</h1>
+
+
+<h2>Default Calendar</h2>
+
+<contributions-calendar id="calendar" start-date="2019-01-06T00:00:00.000Z" number-of-weeks="52"></contributions-calendar>
+
+<h2>Custom Styled Calendar</h2>
+
+<contributions-calendar id="anotherCalendar" start-date="2019-01-06T00:00:00.000Z" number-of-weeks="52"></contributions-calendar>
 
 <script defer src="contributions-calendar.js"></script>
 
@@ -42,7 +60,7 @@
                 .then(data => contributions_calendar.init(data));
 
         // or if you have contributions array already, simply call
-        // contributions_calendar.init(contributions)
+        // contributions_calendar.init(contributions,)
     }
 
 </script>

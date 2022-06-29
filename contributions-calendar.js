@@ -225,9 +225,6 @@ customElements.define('contributions-calendar',
             draw() {
                 this.shadowRoot.innerHTML = '';
 
-                let start_date = this.getAttribute("start-date") || this.START_DATE;
-                let number_of_weeks = parseInt(this.getAttribute("number-of-weeks")) || this.NUMBER_OF_WEEKS;
-
                 let days_array = this.build_days_array(this.CONTRIBUTIONS, this.START_DATE, this.NUMBER_OF_WEEKS);
                 let container_clone = this.build_container(days_array, this.START_DATE, this.NUMBER_OF_WEEKS);
 
