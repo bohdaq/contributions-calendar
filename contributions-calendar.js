@@ -59,10 +59,10 @@ customElements.define('contributions-calendar',
                 <template id="day-template">
                         <style>
                             .day {
-                                margin: 1px;
-                                height: 1rem;
-                                width: 1rem;
-                                background-color: #ebedf0;
+                                margin: var(--contributions-calendar-day-tile-margin, 1px);
+                                height: var(--contributions-calendar-day-tile-height, 1rem);
+                                width: var(--contributions-calendar-day-tile-width, 1rem);
+                                background-color: var(--contributions-calendar-day-tile-default-background, #ebedf0);
                             }
 
                             .day[one-quarter] {
