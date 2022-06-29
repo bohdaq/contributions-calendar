@@ -10,6 +10,9 @@ Hi, Contributions Calendar is a vanilla javascript web component implementation 
 2. No third party dependencies
 3. Shadow DOW encapsulation
 
+##Demo
+You can view it [live here](https://bohdaq.github.io/contributions-calendar/)
+
 ## Download
 [Download web component](https://github.com/bohdaq/contributions-calendar/releases/download/0.0.1/contributions-calendar.zip)
 
