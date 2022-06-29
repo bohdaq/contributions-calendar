@@ -66,19 +66,19 @@ customElements.define('contributions-calendar',
                             }
 
                             .day[one-quarter] {
-                                background-color: #c6e48b;
+                                background-color: var(--contributions-calendar-day-tile-one-quarter-background, #c6e48b);
                             }
 
                             .day[two-quarters] {
-                                background-color: #7bc96f;
+                                background-color: var(--contributions-calendar-day-tile-two-quarters-background, #7bc96f);
                             }
 
                             .day[three-quarters] {
-                                background-color: #239a3b;
+                                background-color: var(--contributions-calendar-day-tile-three-quarters-background, #239a3b);
                             }
 
                             .day[four-quarters] {
-                                background-color: #239a3b;
+                                background-color: var(--contributions-calendar-day-tile-four-quarters-background, #239a8c);
                             }
                         </style>
                         <div class="day">
