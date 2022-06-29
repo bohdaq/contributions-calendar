@@ -8,7 +8,7 @@ Hi, Contributions Calendar is a vanilla javascript web component implementation 
 ## Features
 1. Vanilla Javascript Web Component
 2. No third party dependencies
-3. Shadow DOW encapsulation
+3. Shadow DOM encapsulation
 
 ## Demo
 You can view it [live here](https://bohdaq.github.io/contributions-calendar/)
