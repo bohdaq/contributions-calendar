@@ -151,6 +151,7 @@ customElements.define('contributions-calendar',
                         <style>
                             .container {
                                 display: flex;
+                                flex-wrap: wrap;
                             }
                         </style>
                         <div class="container">
