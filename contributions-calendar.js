@@ -7,6 +7,8 @@ customElements.define('contributions-calendar',
 
             MAX_CONTRIBUTIONS_NUMBER = 0;
 
+            CONTRIBUTIONS = [];
+
 
             build_days_array(contributions, start_date, number_of_weeks) {
                 let date = new Date(start_date).getTime();
@@ -56,7 +58,7 @@ customElements.define('contributions-calendar',
 
             build_day(date_contribution, week_number, day_number) {
                 const day_template_string = `
-                <template id="day-template">
+                    <template id="day-template">
                         <style>
                             .day {
                                 margin: var(--contributions-calendar-day-tile-margin, 1px);
@@ -192,21 +194,51 @@ customElements.define('contributions-calendar',
                 }
             }
 
+            setContributions(contributions) {
+                this.CONTRIBUTIONS = contributions;
+            }
 
-            init(contributions) {
-                const shadowRoot = this.attachShadow({ mode: 'open'});
+            setStartDate(start_date) {
+                this.START_DATE = start_date;
+            }
+
+            setNumberOfWeeks(number_of_weeks) {
+                this.NUMBER_OF_WEEKS = number_of_weeks;
+            }
+
+            init(contributions, start_date, number_of_weeks) {
+                if (!!contributions) {
+                    this.setContributions(contributions);
+                }
+
+                if (start_date) {
+                    this.setStartDate(start_date);
+                }
+
+                if (number_of_weeks) {
+                    this.setNumberOfWeeks(number_of_weeks);
+                }
+
+                this.draw();
+            }
+
+            draw() {
+                this.shadowRoot.innerHTML = '';
 
                 let start_date = this.getAttribute("start-date") || this.START_DATE;
                 let number_of_weeks = parseInt(this.getAttribute("number-of-weeks")) || this.NUMBER_OF_WEEKS;
 
-                let days_array = this.build_days_array(contributions, start_date, number_of_weeks);
-                let container_clone = this.build_container(days_array, start_date, number_of_weeks);
-                shadowRoot.appendChild(container_clone);
+                let days_array = this.build_days_array(this.CONTRIBUTIONS, this.START_DATE, this.NUMBER_OF_WEEKS);
+                let container_clone = this.build_container(days_array, this.START_DATE, this.NUMBER_OF_WEEKS);
+
+                this.shadowRoot.appendChild(container_clone);
             }
 
 
             constructor() {
                 super();
+
+                this.attachShadow({ mode: 'open'});
 
                 this.dispatchEvent(
                     new CustomEvent("contributions-calendar-ready",
