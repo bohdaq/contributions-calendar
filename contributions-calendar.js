@@ -218,6 +218,8 @@ customElements.define('contributions-calendar',
                 if (number_of_weeks) {
                     this.setNumberOfWeeks(number_of_weeks);
                 }
+
+                this.draw();
             }
 
             draw() {

@@ -55,7 +55,7 @@
     function contributions_calendar_ready(event) {
         console.log('contributions-calendar-ready event');
 
-        // contribution calendar instance passed as an event detail
+        // contribution calendar instance passed as an event detail once DOM is ready
         const contributions_calendar = event.detail;
 
 
@@ -72,7 +72,12 @@
             .then(response => response.json())
             .then(contributions => {
                 contributions_calendar.init(contributions, startDate, numberOfWeeks);
-                contributions_calendar.draw();
+
+                // // or alternatively do initialization via
+                // contributions_calendar.setContributions(contributions);
+                // contributions_calendar.setStartDate(startDate);
+                // contributions_calendar.setNumberOfWeeks(numberOfWeeks);
+                // contributions_calendar.draw();
             });
 
     }
