@@ -24,6 +24,8 @@
 
 <h1>Contributions Calendar</h1>
 
+<p>Look at the source code of this page on how to use it</p>
+
 
 <h2>Default Calendar</h2>
 
@@ -38,7 +40,7 @@
 <script>
     document.addEventListener("contributions-calendar-day-selected", day_selected_listener);
     function day_selected_listener(event) {
-        console.log('contributions-calendar-day-selected event');
+        console.log('contributions-calendar-day-selected event for calendar #' + event.target.id);
 
         const date_contributions = event.detail;
 
@@ -53,14 +55,26 @@
     function contributions_calendar_ready(event) {
         console.log('contributions-calendar-ready event');
 
+        // contribution calendar instance passed as an event detail
         const contributions_calendar = event.detail;
 
-        fetch('timestamps.json')
-                .then(response => response.json())
-                .then(data => contributions_calendar.init(data));
 
-        // or if you have contributions array already, simply call
-        // contributions_calendar.init(contributions,)
+        // to use calendar you need contributions (array of UTC timestamps), start date (UTC timestamp)
+        // and number of weeks to show
+
+        let startDate = '2019-01-06T00:00:00.000Z';
+        let numberOfWeeks = 52;
+
+
+        // for simplicity we'll get contributions via HTTP request
+
+        fetch('timestamps.json')
+            .then(response => response.json())
+            .then(contributions => {
+                contributions_calendar.init(contributions, startDate, numberOfWeeks);
+                contributions_calendar.draw();
+            });
+
     }
 
 </script>
