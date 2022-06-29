@@ -22,7 +22,7 @@
 
         const contributions_calendar = event.detail;
 
-        fetch('/timestamps.json')
+        fetch('timestamps.json')
                 .then(response => response.json())
                 .then(data => contributions_calendar.init(data));
 
