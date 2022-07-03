@@ -14,7 +14,7 @@ Hi, Contributions Calendar is a vanilla javascript web component implementation 
 You can view it [live here](https://bohdaq.github.io/contributions-calendar/)
 
 ## Download
-[Download web component](https://github.com/bohdaq/contributions-calendar/releases/download/0.0.1/contributions-calendar.zip)
+[Download web component](https://github.com/bohdaq/contributions-calendar/releases/download/0.0.2/contributions-calendar.zip)
 
 ## Installation
 To use web component simply include contributions-calendar.js into your source code. See index.html for example
