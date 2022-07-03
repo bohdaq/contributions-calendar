@@ -29,11 +29,11 @@
 
 <h2>Default Calendar</h2>
 
-<contributions-calendar id="calendar" start-date="2019-01-06T00:00:00.000Z" number-of-weeks="52"></contributions-calendar>
+<contributions-calendar id="calendar"></contributions-calendar>
 
 <h2>Custom Styled Calendar</h2>
 
-<contributions-calendar id="anotherCalendar" start-date="2019-01-06T00:00:00.000Z" number-of-weeks="52"></contributions-calendar>
+<contributions-calendar id="anotherCalendar"></contributions-calendar>
 
 <script defer src="contributions-calendar.js"></script>
 
@@ -53,7 +53,7 @@
 
     document.addEventListener("contributions-calendar-ready", contributions_calendar_ready);
     function contributions_calendar_ready(event) {
-        console.log('contributions-calendar-ready event');
+        console.log('contributions-calendar-ready event for calendar #' + event.target.id);
 
         // contribution calendar instance passed as an event detail once DOM is ready
         const contributions_calendar = event.detail;
